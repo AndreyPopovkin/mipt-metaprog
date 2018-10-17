@@ -12,7 +12,7 @@ enum class ToolType {
 
 class BInterface {
 public:
-    virtual string getState() = 0;
+    virtual string getState() const = 0;
     virtual void setState(string) = 0;
 };
 
@@ -29,7 +29,7 @@ public:
 
 class B : public BInterface {
 public:
-    virtual string getState() {
+    virtual string getState() const {
         printf("getState %d %s\n", id, state.c_str());
         return state;
     }
@@ -85,7 +85,7 @@ class SwissKnife<ToolType::Proxy> : public BInterface {
 public:
     SwissKnife(B* b) : b(b) {}
 
-    virtual string getState() {
+    virtual string getState() const {
         printf("proxing get\n");
         return b->getState();
     }
@@ -108,7 +108,7 @@ public:
         b.push_back(b_);
     }
 
-    virtual string getState() {
+    virtual string getState() const {
         printf("mediate get\n");
         return b[getId()]->getState();
     }
@@ -117,7 +117,7 @@ public:
         b[getId()]->setState(newState);
     }
 private:
-    int getId() {
+    int getId() const {
         return rand() % b.size();
     }
     std::vector<B*> b;
@@ -129,7 +129,7 @@ class SwissKnife<ToolType::Observer> : public BSubscribableInterface {
 public:
     SwissKnife(B* b) : b(b) {}
 
-    virtual string getState() {
+    virtual string getState() const {
         printf("observe get\n");
         return b->getState();
     }
